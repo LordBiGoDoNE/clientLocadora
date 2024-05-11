@@ -1,41 +1,40 @@
 package org.example.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.example.controller.FabricanteController;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.example.bean.RafaelTableModel;
-import org.example.model.Fabricante;
+import org.example.controller.ModeloController;
+import org.example.model.ModeloDTO;
 
-public class FabricanteConsultaGUI extends javax.swing.JFrame {
+public class ModeloConsultaGUI extends javax.swing.JFrame {
 
-    FabricanteController controller = new FabricanteController();
+    ModeloController controller = new ModeloController();
 
-    public FabricanteConsultaGUI() {
+    public ModeloConsultaGUI() {
         initComponents();
     }
 
     private void carregarTabela() {
-        List<Fabricante> fabricantes = controller.obterFabricantesDoServidor();
+        List<ModeloDTO> modelos = controller.obterModelosDoServidor();
 
-        Object[][] dados = new Object[fabricantes.size()][Fabricante.class.getDeclaredFields().length];
+        Object[][] dados = new Object[modelos.size()][ModeloDTO.class.getDeclaredFields().length];
 
         int i = 0;
 
-        for (Fabricante fabricante : fabricantes) {
-            dados[i][0] = fabricante.getId();
-            dados[i][1] = fabricante.getNome();
+        for (ModeloDTO modelo : modelos) {
+            dados[i][0] = modelo.getId();
+            dados[i][1] = modelo.getDescricao();
+            dados[i][2] = modelo.getFabricante().getNome();
 
             i++;
         }
 
-        tblFabricante.setModel(new RafaelTableModel(dados, new Object[]{"ID", "NOME"}));
+        tblModelo.setModel(new RafaelTableModel(dados, new Object[]{"ID", "NOME", "FABRICANTE"}));
     }
 
     private Integer getIdLinhaSelecionada() {
-        return (Integer) tblFabricante.getModel().getValueAt(tblFabricante.getSelectedRow(), 0);
+        return (Integer) tblModelo.getModel().getValueAt(tblModelo.getSelectedRow(), 0);
     }
 
     /**
@@ -48,7 +47,7 @@ public class FabricanteConsultaGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblFabricante = new javax.swing.JTable();
+        tblModelo = new javax.swing.JTable();
         btnConsultar = new javax.swing.JButton();
         btnAdicionar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
@@ -57,7 +56,7 @@ public class FabricanteConsultaGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tblFabricante.setModel(new javax.swing.table.DefaultTableModel(
+        tblModelo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -68,7 +67,7 @@ public class FabricanteConsultaGUI extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(tblFabricante);
+        jScrollPane1.setViewportView(tblModelo);
 
         btnConsultar.setText("Consultar");
         btnConsultar.addActionListener(new java.awt.event.ActionListener() {
@@ -147,13 +146,13 @@ public class FabricanteConsultaGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        FabricanteEditarGUI dialog = new FabricanteEditarGUI(null, true);
+        ModeloEditarGUI dialog = new ModeloEditarGUI(null, true);
         dialog.setVisible(true);
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        FabricanteEditarGUI dialog = new FabricanteEditarGUI(null, true);
-        dialog.carregarFabricante(getIdLinhaSelecionada());
+        ModeloEditarGUI dialog = new ModeloEditarGUI(null, true);
+        dialog.carregarModelo(getIdLinhaSelecionada());
         dialog.setVisible(true);
     }//GEN-LAST:event_btnEditarActionPerformed
 
@@ -163,7 +162,7 @@ public class FabricanteConsultaGUI extends javax.swing.JFrame {
         if (resposta == JOptionPane.OK_OPTION) {
             String retorno;
             try {
-                retorno = controller.deletarFabricante(getIdLinhaSelecionada());
+                retorno = controller.deletarModelo(getIdLinhaSelecionada());
                 JOptionPane.showMessageDialog(this, retorno);
             } catch (JsonProcessingException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -179,6 +178,6 @@ public class FabricanteConsultaGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnFechar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblFabricante;
+    private javax.swing.JTable tblModelo;
     // End of variables declaration//GEN-END:variables
 }
