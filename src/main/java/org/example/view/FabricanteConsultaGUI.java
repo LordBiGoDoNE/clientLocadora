@@ -3,10 +3,7 @@ package org.example.view;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.controller.FabricanteController;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.example.bean.RafaelTableModel;
 import org.example.model.Fabricante;
 
 public class FabricanteConsultaGUI extends javax.swing.JFrame {
@@ -18,7 +15,7 @@ public class FabricanteConsultaGUI extends javax.swing.JFrame {
     }
 
     private void carregarTabela() {
-        List<Fabricante> fabricantes = controller.obterFabricantesDoServidor();
+        List<Fabricante> fabricantes = controller.get(Fabricante.class);
 
         Object[][] dados = new Object[fabricantes.size()][Fabricante.class.getDeclaredFields().length];
 
@@ -31,7 +28,7 @@ public class FabricanteConsultaGUI extends javax.swing.JFrame {
             i++;
         }
 
-        tblFabricante.setModel(new RafaelTableModel(dados, new Object[]{"ID", "NOME"}));
+//        tblFabricante.setModel(new RafaelTableModel(dados, new Object[]{"ID", "NOME"}));
     }
 
     private Integer getIdLinhaSelecionada() {
@@ -153,7 +150,7 @@ public class FabricanteConsultaGUI extends javax.swing.JFrame {
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         FabricanteEditarGUI dialog = new FabricanteEditarGUI(null, true);
-        dialog.carregarFabricante(getIdLinhaSelecionada());
+        dialog.carregarEntidade(getIdLinhaSelecionada());
         dialog.setVisible(true);
     }//GEN-LAST:event_btnEditarActionPerformed
 
@@ -163,7 +160,7 @@ public class FabricanteConsultaGUI extends javax.swing.JFrame {
         if (resposta == JOptionPane.OK_OPTION) {
             String retorno;
             try {
-                retorno = controller.deletarFabricante(getIdLinhaSelecionada());
+                retorno = controller.delete(getIdLinhaSelecionada());
                 JOptionPane.showMessageDialog(this, retorno);
             } catch (JsonProcessingException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);

@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 import org.example.controller.FabricanteController;
 import org.example.model.Fabricante;
 
-public class FabricanteEditarGUI extends javax.swing.JDialog {
+public class FabricanteEditarGUI extends EditarDialog {
 
     FabricanteController controller = new FabricanteController();
     Fabricante fabricanteEditar = null;
@@ -14,12 +14,6 @@ public class FabricanteEditarGUI extends javax.swing.JDialog {
     public FabricanteEditarGUI(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-    }
-
-    public void carregarFabricante(int id) {
-        fabricanteEditar = controller.obterFabricanteDoServidor(id);
-
-        txtNome.setText(fabricanteEditar.getNome());
     }
 
     /**
@@ -116,7 +110,7 @@ public class FabricanteEditarGUI extends javax.swing.JDialog {
             String mensagemRetorno;
 
             try {
-                mensagemRetorno = controller.inserirFabricante(fabricante);
+                mensagemRetorno = controller.insert(fabricante);
                 JOptionPane.showMessageDialog(this, mensagemRetorno);
             } catch (JsonProcessingException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -127,7 +121,7 @@ public class FabricanteEditarGUI extends javax.swing.JDialog {
             String mensagemRetorno;
 
             try {
-                mensagemRetorno = controller.editarFabricante(fabricanteEditar);
+                mensagemRetorno = controller.update(fabricanteEditar);
                 JOptionPane.showMessageDialog(this, mensagemRetorno);
             } catch (JsonProcessingException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -144,4 +138,11 @@ public class FabricanteEditarGUI extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void carregarEntidade(int id) {
+        fabricanteEditar = controller.get(Fabricante.class, id);
+
+        txtNome.setText(fabricanteEditar.getNome());
+    }
 }

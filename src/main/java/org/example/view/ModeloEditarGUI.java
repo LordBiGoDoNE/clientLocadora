@@ -8,13 +8,14 @@ import javax.swing.JOptionPane;
 import org.example.controller.FabricanteController;
 import org.example.controller.ModeloController;
 import org.example.model.Fabricante;
+import org.example.model.Modelo;
 import org.example.model.ModeloDTO;
 
 public class ModeloEditarGUI extends javax.swing.JDialog {
 
     ModeloController controller = new ModeloController();
     FabricanteController fabricanteController = new FabricanteController();
-    ModeloDTO modeloEditar = null;
+    Modelo modeloEditar = null;
 
     public ModeloEditarGUI(Frame parent, boolean modal) {
         super(parent, modal);
@@ -24,13 +25,13 @@ public class ModeloEditarGUI extends javax.swing.JDialog {
     }
 
     public void carregarModelo(int id) {
-        modeloEditar = controller.obterModeloDoServidor(id);
+        modeloEditar = controller.get(Modelo.class, id);
 
         txtDescricao.setText(modeloEditar.getDescricao());
     }
 
     public void carregarComboBoxFabricante() {
-        List<Fabricante> lista = fabricanteController.obterFabricantesDoServidor();
+        List<Fabricante> lista = fabricanteController.get(Fabricante.class);
 
         Object[] valoresModel = new Object[lista.size()];
 
@@ -153,7 +154,7 @@ public class ModeloEditarGUI extends javax.swing.JDialog {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         if (modeloEditar == null) {
-            ModeloDTO modelo = new ModeloDTO();
+            Modelo modelo = new Modelo();
             modelo.setDescricao(txtDescricao.getText());
 
             Fabricante fabricante = (Fabricante) cboFabricante.getModel().getSelectedItem();
@@ -163,7 +164,7 @@ public class ModeloEditarGUI extends javax.swing.JDialog {
             String mensagemRetorno;
 
             try {
-                mensagemRetorno = controller.inserirModelo(modelo);
+                mensagemRetorno = controller.insert(modelo);
                 JOptionPane.showMessageDialog(this, mensagemRetorno);
             } catch (JsonProcessingException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -178,7 +179,7 @@ public class ModeloEditarGUI extends javax.swing.JDialog {
             String mensagemRetorno;
 
             try {
-                mensagemRetorno = controller.editarModelo(modeloEditar);
+                mensagemRetorno = controller.update(modeloEditar);
                 JOptionPane.showMessageDialog(this, mensagemRetorno);
             } catch (JsonProcessingException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
